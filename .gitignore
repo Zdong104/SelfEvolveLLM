@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Secrets
+.env
+
+# Large or re-downloadable files
+Papers/*.pdf
+*.qcow2
+*.safetensors
+models/
+runs/
