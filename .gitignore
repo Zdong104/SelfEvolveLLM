@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 .venv/
+.cache/
+.config/
 
 # Secrets
 .env

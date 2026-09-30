@@ -1,70 +1,54 @@
-# Independent design brief
+# Design brief, round 2
 
-Produce an executable research design for SelfEvolveLLM. Be concise, critical, and specific.
+Input to the second design round. Delete it once the PI accepts the design.
 
-## Objective
+The PI reviewed round 1 (`DESIGN.md`, "rent-or-buy consolidation") and changed direction. Their comments are inline in `DESIGN.md` (text between hyphens, `-like this-`) and on the last line of `../FINDINGS_AND_PLAN.md`. Read them yourself; below is the orchestrator's reading, with the PI's own words where they are open to interpretation.
 
-Design a general agent that learns from verified experience in an isolated shell-and-internet sandbox. It should retry failed tasks, consolidate reusable experience into weights, re-solve after episode context is removed, transfer to related tasks, retain old abilities, and reduce inference cost with practice. It should continual learning and not forget the knowledge learned before. 
+## What the PI wants (fixed)
 
-This is an independed project from any other on the computer. 
+1. **Aim.** Build the best agent for the three core problems: lifelong memory far beyond any context window; continual learning without forgetting; a reward that makes it interact with its environment and evolve. The contribution is a working agent and its lifelong evidence, not a new principle. Existing ideas and code are preferred ("If all ideas existed, that is even better"). Rent-or-buy is no longer the claim.
+2. **End state.** A personal lifelong assistant: the PI keeps giving it tasks; it finishes them and hands them back, learns the PI's habits, confirms what the PI needs, and builds and uses its own tools. CADWorld is only its first environment.
+3. **A life like a human's.**
+   - Time is irreversible: "no revert would happen in higher aspect, like false would be a cost as well … we can not revert back the time." No rollback of the agent's weights, memory or world. Its environment persists and changes across tasks.
+   - Every experience is learning, evaluation included. There are no feedback-free evaluation episodes.
+   - Death is natural; do not author hazard tasks. "When model facing some non critical fault, it will learn from the fault. But when critical fault happen, human will be death and no restart. … another model (restart, like another human) can learn from the summarization from the [severe] critical experience from previous model."
+4. **Access.** Only fundamental tools (GUI, shell, Python) and full freedom inside its VM or container; it builds everything else. Open internet ("it needs to learn and grab knowledge"). It may contact humans and ask for help ("no boundary").
+5. **Learning like a human.**
+   - Reflection (replay): "how can the model more efficiently learn from the limited trajectories."
+   - Evolution by comparison: "Either at same time or in series. Model evolve (like advantage over other rollout) and whoever have the better performance adapt (dominated but maybe not suddenly change all, some decay)."
+   - A sleep rhythm: "I actually like this idea about model decide when to adapt or evolve, but maybe we can define a hyper parameter on this? As like a day is 24 hours and human evolved to do the 'general replay' during sleep time, but that is adapted to the environment setting."
+   - The agent may evolve its base model too, not only adapters.
+6. **Benchmark as is.** Use CADWorld's tasks, evaluators and references unchanged. Build no task variants or reference constructors.
+7. **Numbers.** Give every constant a one-line reason, or mark it as a tunable default and state the rule that tunes it; the PI rejected round 1's unexplained thresholds. Accepted by the PI: general drift ≤ 1 pp per update and ≤ 2 pp cumulative; retention ≥ best − 5 pp. Energy and reward constants are yours to choose; performance is what matters.
+8. **Documents.** The PI reads only a short plain-language summary. No jargon without a plain explanation.
 
-## Scientific standard
+Orchestrator decision: the internet is open except for the benchmark's answer key (the CADWorld repository and its evaluator code), and all traffic is logged. Otherwise CADWorld results mean nothing.
 
-The method must make a contribution stronger than assembling existing components. Center the design on one falsifiable scientific claim and identify the new mechanism or principle responsible for it. The evidence must separate weight learning from prompt, retrieval, tool, and benchmark-contamination effects.
+## Inputs
 
-Treat a top ML conference as the primary target. State what qualitatively stronger finding would justify a broad journal submission.
+- `../FINDINGS_AND_PLAN.md` §6: environment, model and compute facts, including the 2026-09-29 smoke test.
+- `DESIGN.md`: round 1 with the PI's comments. Keep whatever survives the new direction.
+- `../survey/parametric_memory.md` and the papers in `../../Papers/`.
+- `../../third_party/CADWORLD` (pinned): check how a task is set up and scored, to decide whether tasks can run inside one persistent VM.
 
-## Fixed requirements
+## Questions the design must answer
 
-- General, verifier-backed tasks in a reproducible sandbox.
-- Short-, medium-, and long-timescale memory with explicit forgetting.
-- A parametric write path, not only retrieval or prompt memory.
-- This should related to systematic continual learning, with interacting with enviroment and be able to make the model stronger with RL and efficient reply.
-- Energy-aware evaluation: verified success minus thinking, action, and environment cost. It is just intuitive action cause consequence and token cost enery for survive. Model should adapt to the enviroment like human do.
-- Agent-created tools stored and use those tool to help agent get stronger.
-- Strong context/retrieval, continual-learning, self-distillation, and RL baselines.
-- Context-free evaluation after memory wipe, plus near/far transfer, retention, general-capability drift, and plasticity over time.
+1. **A day in the life.** What a day is (episodes, wall-clock or energy) and its default length, with the reason. What happens awake and asleep. What the agent decides and what the rhythm fixes. Whether parallel VMs are several bodies sharing one brain.
+2. **Reflection.** The concrete pipeline that gets the most learning out of few trajectories, e.g. verifier stage reports, contrast of successes and failures, hindsight, self-set practice, reading, asking a human. What is kept as text, what is trained into weights, and when.
+3. **Evolution.** The learning operator (RL with group-relative advantage, self-distillation, SFT, replay, or a mix), and how "better behavior dominates gradually" is implemented. How old skills and general ability are protected without rollback. When and how the base model itself changes.
+4. **No-revert world.** How CADWorld tasks reach a persistent home; what persists (files, tools, notes, installed software); what the agent can break and what follows. How updates stay safe when they cannot be undone. Is testing a candidate update before adopting it compatible with "no revert"? Argue it.
+5. **Death and succession.** Critical versus non-critical faults, and how each is detected. What the successor inherits (which weights, if any; testament contents; tools) and how it learns from the testament. How the lineage and the scientific record survive a death.
+6. **Reward and energy.** Keep, simplify or replace round 1's energy ledger. How "a mistake is a cost" enters. Anti-gaming that survives open internet and human help.
+7. **Measurement.** With every episode also a lesson, how progress, forgetting, transfer and cost are measured (e.g., first-attempt success on never-seen tasks over the lifetime). The fewest comparison agents needed to show this agent beats the same base model with the same tools and a strong context memory, and how they run without violating "no revert".
+8. **Stream.** Task order and recurrence over CADWorld's 200 tasks (no variants), then later environments and the PI's own tasks. How the agent gets its first successes when the start model rarely succeeds.
+9. **Build.** A reuse-first map of existing open-source frameworks (agentic RL, memory, serving) and what we still write. Milestones with go/no-go gates. Compute on 2 GPUs now and 4 later.
+10. **Risks.** The top risks and pivots, and at most 3 decisions that truly need the PI.
 
-## Starting hypotheses, not commitments
-
-- Context/on-policy self-distillation may write the residual between an experience-conditioned teacher and a context-free student more safely than ordinary SFT.
-- Fast and slow LoRA adapters may provide practical memory timescales.
-- Surprise, recurrence, and future inference cost may determine what is worth consolidating.
-- Interleaved replay and verified synthetic variants may make sleep useful for transfer.
-- Usage/Fisher protection or a capacity gate may reduce interference.
-
-Reject or simplify any of these if the evidence does not justify its complexity.
-
-## Relevant foundations
-
-- SCoL: learned where-to-write and acquisition-minus-forgetting reward for streamed textual knowledge.
-- TENSE: finite writable capacity and routing infeasible updates away from protected weights.
-- Titans: surprise, momentum, and adaptive forgetting principles.
-- Survey digest: `../survey/parametric_memory.md`.
-- Current plan and constraints: `../FINDINGS_AND_PLAN.md`.
-
-The closest external work must be checked before novelty claims. At minimum compare with Language Models Need Sleep, SOLO, LifeSkill, PEAM, SDFT/SDPO/OPSD, SEAL, and OpenClaw-RL.
-
-## Resources and boundary
-
-- 4× RTX PRO 6000 Blackwell (96 GB), Do not use the 8 GB A1000, 240 CPU threads, and 503 GB RAM.
-- Start with Candidate: [`Qwen/Qwen3.8-27B`](https://huggingface.co/Qwen/Qwen3.8-27B) and model should be able to evolve and choose the candidate. When evolving, agent should be able to recognize action that kills itself and evolve etc.
-- All dependencies, imported repositories, environments, data, and outputs must live inside this repository unless the PI explicitly approves another location.
-- Online reuse is encouraged. Record source revision, license, and modifications. Do not inspect, modify, or depend on unrelated local projects.
+Where a PI wish conflicts with a working agent (for example, a permanent death could erase months of learning), say so plainly and propose the least harmful way to honor it.
 
 ## Deliverable
 
-Write one compact design containing:
+Write `round2_<your letter>.md` in this directory, in two parts:
 
-1. one-sentence thesis, falsifiable prediction, and honest novelty comparison;
-2. minimal architecture and data flow;
-3. exact write, decay, replay, admission, and rollback rules;
-4. energy/reward formula and anti-gaming controls;
-5. smallest decisive pilot, baselines, ablations, metrics, and statistics;
-6. reuse/build map restricted to in-repository or online dependencies;
-7. compute estimate for two and four large GPUs;
-8. staged milestones with explicit go/no-go gates;
-9. top risks and pivots; and
-10. no more than seven decisions for the PI.
-
-Prefer equations, tables, and measurable thresholds over prose. Aim for roughly 2,000–3,000 words; omit background already captured in the plan or survey.
+1. **For the PI:** at most one page, in plain words and human analogies, with no symbols. Every number carries its reason.
+2. **Internal:** exact rules, equations and numbers, each with its reason. Prefer tables to prose. At most 3,000 words.

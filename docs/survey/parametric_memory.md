@@ -1,6 +1,6 @@
 # Survey: parametric memory, sleep/consolidation, closest competitors
 
-Updated 2026-09-29. This is supporting evidence, not an implementation plan. Numbers mostly come from arXiv abstracts; only the Sleep paper was checked against its PDF. Verify the full paper and current competitor landscape before citing.
+Updated 2026-09-29. This is supporting evidence, not an implementation plan. Numbers mostly come from arXiv abstracts; only the Sleep paper was checked against its PDF. Verify the full paper and current competitor landscape before citing. IDs with a PDF in `../../Papers/` were checked against their arXiv titles and abstracts on 2026-09-29.
 
 ## Key takeaways
 1. **The "Google sleep" paper** is **Behrouz, Hashemi, Javanmard, Mirrokni, *Language Models Need Sleep: Learning to Self-Modify and Consolidate Memories*** (Google Research + Cornell, arXiv 2606.03979, v1 Jun 2026, v2 Jul 2026; an ICLR 2026 OpenReview submission).
@@ -93,8 +93,6 @@ Updated 2026-09-29. This is supporting evidence, not an implementation plan. Num
 - Non-parametric baselines to beat: ReasoningBank 2509.25140 (✓ Apache-2.0), ReMem/Evo-Memory, and Anthropic's Dreaming.
 - Evaluation protocols to adopt: AgentStream 2608.00155, and "Do Self-Evolving Agents Forget?" 2605.09315.
 
-you can put the related research paper from other people to /home/bravo/Documents/SelfEvolveLLM/Papers
-
 ## The gap a new paper can claim
 1. **Setting:** start from initially failed tasks (pass@k=0) in an **open sandbox** (shell, web); retry with reflection until a **verifier** passes; consolidate **online into weights**.
 2. **Proof the gain is in the weights:** re-solve after a full **context and memory wipe**, show near and far transfer, and keep forgetting bounded over hundreds or more cycles.
@@ -102,6 +100,6 @@ you can put the related research paper from other people to /home/bravo/Document
 4. **Neuroscience-tied ablations:** prediction-error gating, fast/slow timescales, usage protection, and sleep with vs without dreaming. Hypothesis: sleep matters for transfer, not for re-solving.
 5. **Open-source code**; most competitors have none.
 
-## Project boundary
+## Maintenance
 
-Evaluate reusable open-source work by importing a pinned, licensed copy into this repository. Do not use or depend on unrelated projects elsewhere on this machine. Keep only survey details that affect a design choice, baseline, or novelty claim; remove superseded listings during the next literature refresh.
+Keep only details that affect a design choice, baseline or novelty claim, and remove superseded listings at each literature refresh. Paper PDFs are in `../../Papers/`; the reuse boundary is in `../FINDINGS_AND_PLAN.md` §3.
